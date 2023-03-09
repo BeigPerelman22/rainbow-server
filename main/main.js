@@ -1,7 +1,7 @@
 const express = require("express");
 
 const app = express();
-app.use(express.static('../2'));
+app.use(express.static('../main'));
 const http = require('http').Server(app);
 // const io = require('socket.io')(http);
 var request = require('request');
