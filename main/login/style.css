@@ -1,0 +1,61 @@
+.login-box {
+	margin: 200px auto;
+	width: 300px;
+	background: #fff;
+	padding: 40px;
+	border-radius: 10px;
+	box-shadow: 0 0 20px 0 rgba(0,0,0,0.2);
+	text-align: center;
+}
+
+.user-box {
+	position: relative;
+	margin-bottom: 20px;
+}
+
+.user-box input {
+	width: 100%;
+	padding: 10px 0;
+	font-size: 16px;
+	border: none;
+	border-bottom: 1px solid #999;
+	outline: none;
+	background: transparent;
+}
+
+.user-box label {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 10px 0;
+	font-size: 16px;
+	color: #999;
+	pointer-events: none;
+	transition: 0.5s;
+}
+
+.user-box input:focus ~ label,
+.user-box input:valid ~ label {
+	top: -20px;
+	left: 0;
+	color: #333;
+	font-size: 12px;
+}
+
+.login-btn {
+	display: block;
+	width: 100%;
+	padding: 10px;
+	margin-top: 30px;
+	color: #fff;
+	background: #000;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: 0.5s;
+}
+
+.login-btn:hover {
+	background: #333;
+}
