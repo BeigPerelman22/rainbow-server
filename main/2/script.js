@@ -174,7 +174,7 @@ var raw = JSON.stringify({
   "calenderID": "levi7701414@gmail.com",
   "token":"ya29.a0AVvZVso6CaB9IXIzWN-Bukme6Y-M09COQuj8UQrkCmAnpJe2-I8InBbIHva2a8qINCPc_llxdw1kHQlgVFS0VtRBRqolVOjTNS_Op7lSJn97AbYk9BwNDFm3aZ9ZP-FzRWBKI6D07VNbbd1iM5_WbBrEXNgOVAaCgYKAecSARESFQGbdwaIglj9R2fqUkFTho0DZL7UsA0165",
   "startTime": startTime,
-  "entTime": entTime
+  "endTime": entTime
 });
 
 var requestOptions = {
