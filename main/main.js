@@ -77,6 +77,10 @@ const i = process.env.I
         app.post('/calendar/newevent' ,jsonParser,(req, res) => {
             // listEvents(auth) {
                 
+               let location = req.body.location || null;
+                let summary = req.body.summary || null;
+                 
+
                 var options = {
                 'method': 'post',
                 'url': `https://www.googleapis.com/calendar/v3/calendars/${req.body.calenderID}/events`,
@@ -93,9 +97,8 @@ const i = process.env.I
                       "dateTime": req.body.entTime,
                       "timeZone": "Asia/Jerusalem"
                     },
-                    // "location":req.body.location || "",
-                    // "summary":req.body.summary || "",
-                    // "icon":req.body.icon || ""
+                    "location":location,
+                    "summary":summary,
                   })
                 
                 };
@@ -114,7 +117,7 @@ http.listen(port, () => {
     app.get(function (req, res) {
         res.sendFile();
     });
-  console.log(`Mock pos listening on port ${port}`)
+  console.log(`rainbow app listening on port ${port}`)
 })
     
 
