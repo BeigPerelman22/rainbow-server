@@ -11,6 +11,7 @@ var jsonParser = bodyParser.json();
 const port = 773;
 const i = process.env.I;
 
+const console = require('console');
 
 app.get('/calendar/events', jsonParser, (req, res) => {
   // listEvents(auth) {
@@ -36,7 +37,8 @@ app.post('/calendar/newevent', jsonParser, (req, res) => {
 
   let location = req.body.location || null;
   let summary = req.body.summary || null;
-
+  let colorId = req.body.colorId ||null
+  
   var options = {
     method: 'post',
     url: `https://www.googleapis.com/calendar/v3/calendars/${req.body.calenderId}/events`,
@@ -55,6 +57,7 @@ app.post('/calendar/newevent', jsonParser, (req, res) => {
       },
       location: location,
       summary: summary,
+        colorId :colorId 
     }),
   };
 
@@ -71,6 +74,7 @@ app.put('/calendar/updateevent', jsonParser, (req, res) => {
 
   let location = req.body.location || null;
   let summary = req.body.summary || null;
+  let colorId = req.body.colorId ||null
 
   var options = {
     method: 'put',
@@ -90,6 +94,7 @@ app.put('/calendar/updateevent', jsonParser, (req, res) => {
       },
       location: location,
       summary: summary,
+      colorId:colorId
     }),
   };
 
