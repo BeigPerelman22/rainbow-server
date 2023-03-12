@@ -87,7 +87,7 @@ app.put('/calendar/updateevent', jsonParser, (req, res) => {
         timeZone: 'Asia/Jerusalem',
       },
       end: {
-        dateTime: req.body.entTime,
+        dateTime: req.body.endTime,
         timeZone: 'Asia/Jerusalem',
       },
       location: location,

@@ -149,11 +149,20 @@ function deleteEvent() {
   closeModal();
 }
 
-function updateEvent() {
+function onUpdateEventClicked() {
     let inputTitle = document.getElementById("eventTitleInput1");
     let inputTime = document.getElementById("eventTimeInput1");
 
-    console.log(inputTitle, inputTime);
+  if (inputTitle.value)  {
+    let startDate = new Date(inputTime.value);
+    let endDate = startDate.getTime() + 30 * 60 * 1000
+    endDate = new Date(endDate);
+    updateEvent(startDate.toISOString().slice(0, 24),endDate.toISOString().slice(0, 24), inputTitle.value);
+    inputTitle.classList.remove('error');
+    closeModal();
+  } else {
+    inputTime.classList.add('error');
+  }
 }
 
 function onMonthChanged(indexDiff) {
@@ -186,6 +195,37 @@ function saveINGoogle(startTime, entTime, summary){
        let newEvent =  JSON.parse(result);
        events = [...events, newEvent];
        initCalender();
+      })
+      .catch(error => console.log('error', error));
+}
+
+function updateEvent(startTime, endTime, summary) {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    let body = JSON.stringify({
+      "calenderId": JSON.parse(localStorage.getItem('calendar_id')),
+      "token": JSON.parse(localStorage.getItem('token')),
+      "startTime": startTime,
+      "endTime": endTime,
+      "summary": summary,
+      "eventId": currentEvent.id
+    });
+
+    let requestOptions = {
+      method: 'PUT',
+      headers: myHeaders,
+      body: body,
+      redirect: 'follow'
+    };
+
+    fetch("http://localhost:3000/calendar/updateevent", requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        const updatedEvent = JSON.parse(result);
+        const index = events.findIndex(event => event.id === currentEvent.id);
+        events[index] = updatedEvent;
+        initCalender();
       })
       .catch(error => console.log('error', error));
 }
