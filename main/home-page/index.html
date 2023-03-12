@@ -3,60 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar App Vanilla JS</title>
-
+    <title>Calendar App Rainbow</title>
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,600,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="container">
-    <div id="header">
-        <div id="monthDisplay"></div>
-        <div>
-            <button id="backButton" onclick="onMonthChanged(-1)">Back</button>
-            <button id="nextButton" onclick="onMonthChanged(1)">Next</button>
+<nav><h1 id="line"> Rainbow </h1></nav>
+
+<div>
+    <br><br><br><br>
+
+    <div id ="body2">
+
+        <div id="container">
+
+            <div id="title">
+                <div id="monthDisplay"></div>
+                <div>
+                    <button id="backButton" onclick="onMonthChanged(-1)">Back</button>
+                    <button id="nextButton" onclick="onMonthChanged(1)">Next</button>
+                </div>
+            </div>
+
+            <div id="weekdays">
+                <div>Sunday</div>
+                <div>Monday</div>
+                <div>Tuesday</div>
+                <div>Wednesday</div>
+                <div>Thursday</div>
+                <div>Friday</div>
+                <div>Saturday</div>
+            </div>
+
+            <div id="calendar"></div>
+        </div>
+
+        <div id="newEventModal">
+            <h2>New Event</h2>
+
+            <input id="eventTitleInput" placeholder="Event Title" />
+            <input type ="datetime-local" id="eventTimeInput" />
+            <br><br><br>
+            <button id="saveButton" onclick="saveEvent()">Save</button>
+            <button id="cancelButton" onclick="closeModal()">Cancel</button>
+        </div>
+
+        <div id="deleteEventModal">
+            <h2>Event</h2>
+
+            <p id="eventText"></p>
+            <p id="eventTime"></p>
+            <input type="text" id="eventTitleInput1"/>
+
+            <input type ="datetime-local" id="eventTimeInput1"/>
+            <br><br><br>
+            <button id="deleteButton" onclick="deleteEvent()">Delete</button>
+            <button id="updateButton" onClick="onUpdateEventClicked()">Update</button>
+            <button id="closeButton" onclick="closeModal()">Close</button>
+
         </div>
     </div>
 
-    <div id="weekdays">
-        <div>Sunday</div>
-        <div>Monday</div>
-        <div>Tuesday</div>
-        <div>Wednesday</div>
-        <div>Thursday</div>
-        <div>Friday</div>
-        <div>Saturday</div>
-    </div>
+    <div id="modalBackDrop"></div>
 
-    <div id="calendar"></div>
-</div>
-
-<div id="newEventModal">
-    <h2>New Event</h2>
-
-    <input id="eventTitleInput" placeholder="Event Title"/>
-    <input type="datetime-local" id="eventTimeInput"/>
-    <br><br><br>
-    <button id="saveButton" onclick="saveEvent()">Save</button>
-    <button id="cancelButton" onclick="closeModal()">Cancel</button>
-</div>
-
-<div id="deleteEventModal">
-    <h2>Event</h2>
-
-    <p id="eventText"></p>
-    <p id="eventTime"></p>
-    <input type="text" id="eventTitleInput1"/>
-
-    <input type="datetime-local" id="eventTimeInput1"/>
-    <br>
-    <button id="deleteButton" onclick="deleteEvent()">Delete</button>
-    <button id="changeButton" onClick="onUpdateEventClicked()">Change</button>
-    <button id="closeButton" onclick="closeModal()">Close</button>
 
 </div>
-
-<div id="modalBackDrop"></div>
-
-<script src="./script.js"></script>
 </body>
+<script src="./script.js"></script>
 </html>
