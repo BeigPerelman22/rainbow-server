@@ -19,11 +19,10 @@ function openModal(date) {
     let inputTitle = document.getElementById("eventTitleInput1");
     let inputTime = document.getElementById("eventTimeInput1");
     inputTitle.value = currentEvent.summary; //"New Value";
-    inputTime.value = dateToString(currentEvent.start.dateTime);
+    inputTime.value = currentEvent.start.dateTime.slice(0,16);
     
     deleteEventModal.style.display = 'block';
-  }
-  else {
+  } else {
        newEventModal.style.display = 'block';
   }
 
@@ -66,7 +65,6 @@ function initCalender() {
 
     if (i > paddingDays) {
       daySquare.innerText = i - paddingDays;
-//      const eventForDay = events.find(e => e.date === dayString);
 
     const eventForDay = events?.find(e => {
       const dateString = e.start.dateTime;
