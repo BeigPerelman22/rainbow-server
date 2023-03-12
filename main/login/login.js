@@ -46,11 +46,9 @@ async function saveUserCredentials() {
     calendarList.execute((response) => {
         if (response && response.items && response.items.length > 0) {
           var calendarId = response.items[0].id;
-          console.log('Calendar ID: ' + calendarId);
-          console.log('token' + gapi.client.getToken().access_token);
           localStorage.setItem('calendar_id', JSON.stringify(calendarId));
           localStorage.setItem('token', JSON.stringify(gapi.client.getToken().access_token));
-          window.location.href = '/calendar'
+          window.location.href = '/home'
         } else {
           console.log('No calendars found for this user.');
         }
@@ -59,3 +57,7 @@ async function saveUserCredentials() {
     return;
   }
 }
+
+//if (localStorage.getItem('token')) {
+//    window.location.href = '/home'
+//}
