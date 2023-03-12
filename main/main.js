@@ -2,7 +2,7 @@ const express = require("express");
 
 const app = express();
 app.use( '/', express.static(__dirname + '/client/login'));
-app.use( '/home', express.static(__dirname + '/client/home-page'));
+app.use( '/home', express.static(__dirname + '/client/home'));
 const http = require('http').Server(app);
 var request = require('request');
 var bodyParser = require('body-parser')
@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 
 app.get('/home', (req, res) => {
-    res.sendFile(__dirname + '/client/home-page/index.html');
+    res.sendFile(__dirname + '/client/home/index.html');
 })
 
 

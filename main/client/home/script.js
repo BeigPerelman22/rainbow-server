@@ -137,7 +137,7 @@ function deleteEvent() {
       redirect: 'follow'
     };
 
-    fetch("http://localhost:3000/calendar/deleteevent", requestOptions)
+    fetch("https://rainbow-server-6a19e.web.app/calendar/deleteevent", requestOptions)
       .then(result => {
            events = events.filter(event => event.id !== eventToDelete.id);
            initCalender();
@@ -187,7 +187,7 @@ function saveINGoogle(startTime, entTime, summary){
       redirect: 'follow'
     };
 
-    fetch("http://localhost:3000/calendar/newevent", requestOptions)
+    fetch("https://rainbow-server-6a19e.web.app/calendar/newevent", requestOptions)
       .then(response => response.text())
       .then(result => {
        let newEvent =  JSON.parse(result);
@@ -217,7 +217,7 @@ function updateEvent(startTime, endTime, summary) {
       redirect: 'follow'
     };
 
-    fetch("http://localhost:3000/calendar/updateevent", requestOptions)
+    fetch("https://rainbow-server-6a19e.web.app/calendar/updateevent", requestOptions)
       .then(response => response.text())
       .then(result => {
         const updatedEvent = JSON.parse(result);
@@ -243,7 +243,7 @@ function loadEvents() {
         body: body
     }
 
-    fetch("http://localhost:3000/calendar/events", requestOptions)
+    fetch("https://rainbow-server-6a19e.web.app/calendar/events", requestOptions)
         .then(response => response.text())
         .then(result => {
             let eventsResult = JSON.parse(result).items;
