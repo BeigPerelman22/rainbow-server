@@ -1,8 +1,12 @@
 const express = require("express");
+const cors = require('cors');
 
 const app = express();
 app.use( '/', express.static(__dirname + '/client/login'));
 app.use( '/home', express.static(__dirname + '/client/home-page'));
+app.use(cors({
+    origin: '*'
+}));
 const http = require('http').Server(app);
 var request = require('request');
 var bodyParser = require('body-parser')
