@@ -184,7 +184,7 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("http://localhost:773/calendar/newevent", requestOptions)
+fetch("https://rainbow-server-6a19e--rainbow-server-vh67khyd.web.app/calendar/newevent", requestOptions)
   .then(response => response.text())
   .then(result => console.log(result))
   .catch(error => console.log('error', error));
