@@ -72,37 +72,58 @@ app.get('/home', (req, res) => {
 })
 
 
-app.get('/calendar/events', jsonParser, (req, res) => {
- let getE =  googleComponent.google.getEvents(req);
- console.log(getE)
- res.send(getE)
-  // var options = {
-  //   method: 'GET',
-  //   url: `https://www.googleapis.com/calendar/v3/calendars/${req.body.calenderId}/events`,
-  //   headers: {
-  //     Authorization: `Bearer ${req.body.token}`
-  //   },
-  // };
-  // request(options, function (error, response) {
-  //   if (error) throw new Error(error);
-  //   res.send(response.body);
-  // });
+app.get('/calendar/events', jsonParser, async(req, res) => {
+  console.log("hi")
+ let getE =await  googleComponent.google.getEvents(req.body);
+
+ if (getE==400){
+  console.log(getE)
+  res.status(400).end();
+}
+else{
+  console.log(getE)
+  res.send(getE)
+}
+ 
+ 
 });
 
-app.post('/calendar/newevent', jsonParser, (req, res) => {
-  let addE = googleComponent.google.addEvent(req)
+app.post('/calendar/newevent', jsonParser,async (req, res) => {
+  let addE = await googleComponent.google.addEvent(req)
 
-  res.send(addE)
+  if (addE==400){
+    // console.log(addE)
+    res.status(400).end();
+  }
+  else{
+    // console.log(addE)
+    res.send(addE)
+  }
+ 
+});
+
+app.put('/calendar/updateevent', jsonParser, async(req, res) => {
+  let update =await googleComponent.google.updateEvent(req)
+
+  if (update==400){
+    // console.log(addE)
+    res.status(400).end();
+  }
+  else{
+    // console.log(addE)
+    res.send(update)
+  }
+  
   // let location = req.body.location || null;
   // let summary = req.body.summary || null;
   // let colorId = req.body.colorId ||null
-  // console.log(req.body.startTime, req.body.endTime)
 
   // var options = {
-  //   method: 'post',
-  //   url: `https://www.googleapis.com/calendar/v3/calendars/${req.body.calenderId}/events`,
+  //   method: 'put',
+  //   url: `https://www.googleapis.com/calendar/v3/calendars/${req.body.calenderId}/events/${req.body.eventId}`,
   //   headers: {
   //     Authorization: `Bearer ${req.body.token}`,
+  //     // ya29.a0AVvZVso81Yl06-Uj60GWDgcDb_3U8kqEbiarAkz3uAUFZL7LEpVb5K0xa19X3VuzyuT2gvV3ONYG9Fg3uSy30sdXkP8bhckuefHJMhQM_BI4f3nvbFNlgO4UrRE82V48xnCRg_7Se4xsN2pCDqVuHi0pJnNCRwaCgYKAZYSARESFQGbdwaIHUMYDx70xqovRqYdUQWZ7Q0165'
   //   },
   //   body: JSON.stringify({
   //     start: {
@@ -115,7 +136,7 @@ app.post('/calendar/newevent', jsonParser, (req, res) => {
   //     },
   //     location: location,
   //     summary: summary,
-  //       colorId :colorId
+  //     colorId:colorId
   //   }),
   // };
 
@@ -124,58 +145,34 @@ app.post('/calendar/newevent', jsonParser, (req, res) => {
   //   console.log(response.body);
   //   res.send(response.body);
 
-  //   dbComponent.db.addEvent('clanderEvents',req.body)
   // });
 });
 
-app.put('/calendar/updateevent', jsonParser, (req, res) => {
-  let location = req.body.location || null;
-  let summary = req.body.summary || null;
-  let colorId = req.body.colorId ||null
+app.delete('/calendar/deleteevent', jsonParser,async (req, res) => {
 
-  var options = {
-    method: 'put',
-    url: `https://www.googleapis.com/calendar/v3/calendars/${req.body.calenderId}/events/${req.body.eventId}`,
-    headers: {
-      Authorization: `Bearer ${req.body.token}`,
-      // ya29.a0AVvZVso81Yl06-Uj60GWDgcDb_3U8kqEbiarAkz3uAUFZL7LEpVb5K0xa19X3VuzyuT2gvV3ONYG9Fg3uSy30sdXkP8bhckuefHJMhQM_BI4f3nvbFNlgO4UrRE82V48xnCRg_7Se4xsN2pCDqVuHi0pJnNCRwaCgYKAZYSARESFQGbdwaIHUMYDx70xqovRqYdUQWZ7Q0165'
-    },
-    body: JSON.stringify({
-      start: {
-        dateTime: req.body.startTime,
-        timeZone: 'Asia/Jerusalem',
-      },
-      end: {
-        dateTime: req.body.endTime,
-        timeZone: 'Asia/Jerusalem',
-      },
-      location: location,
-      summary: summary,
-      colorId:colorId
-    }),
-  };
+  let deleteE = await googleComponent.google.deleteEvent(req.body)
+ await console.log(JSON.stringify(deleteE))
 
-  request(options, function (error, response) {
-    if (error) throw new Error(error);
-    console.log(response.body);
-    res.send(response.body);
-
-  });
-});
-
-app.delete('/calendar/deleteevent', jsonParser, (req, res) => {
-  var options = {
-    method: 'DELETE',
-    url: `https://www.googleapis.com/calendar/v3/calendars/${req.body.calenderId}/events/${req.body.eventId}`,
-    headers: {
-      Authorization: `Bearer ${req.body.token}`,
-    },
-  };
-  request(options, function (error, response) {
-    if (error) throw new Error(error);
-    console.log(response.body);
-    res.send(response.body);
-  });
+  if (deleteE==400){
+    console.log(deleteE)
+    res.status(400).end();
+  }
+  else{
+    console.log(deleteE)
+    res.send(deleteE)
+  }
+  // var options = {
+  //   method: 'DELETE',
+  //   url: `https://www.googleapis.com/calendar/v3/calendars/${req.body.calenderId}/events/${req.body.eventId}`,
+  //   headers: {
+  //     Authorization: `Bearer ${req.body.token}`,
+  //   },
+  // };
+  // request(options, function (error, response) {
+  //   if (error) throw new Error(error);
+  //   console.log(response.body);
+  //   res.send(response.body);
+  // });
 });
 
 http.listen(port, () => {

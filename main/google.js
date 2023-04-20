@@ -1,85 +1,151 @@
-
-
-
 var request = require('request');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 const path = require('path');
-var jsonParser = bodyParser.json()
+var jsonParser = bodyParser.json();
 
+module.exports.google = {
+  // Initialize Cloud Firestore and get a reference to the service
+  // const db = firebase.firestore();
 
+  async addEvent(data) {
+    let location = data.body.location || null;
+    let summary = data.body.summary || null;
+    let colorId = data.body.colorId || null;
+    let recurrence = data.body.recurrence || null;
+    console.log(data.body.startTime, data.body.endTime);
 
-module.exports.google= {
-// Initialize Cloud Firestore and get a reference to the service
-// const db = firebase.firestore();
-
-async  addEvent(data){
-  let location = data.body.location || null;
-  let summary = data.body.summary || null;
-  let colorId = data.body.colorId ||null
-  console.log(data.body.startTime, data.body.endTime)
-
-  var options = {
-    method: 'post',
-    url: `https://www.googleapis.com/calendar/v3/calendars/${data.body.calenderId}/events`,
-    headers: {
-      Authorization: `Bearer ${data.body.token}`,
-    },
-    body: JSON.stringify({
-      start: {
-        dateTime: data.body.startTime,
-        timeZone: 'Asia/Jerusalem',
+    var options = {
+      method: 'post',
+      url: `https://www.googleapis.com/calendar/v3/calendars/${data.body.calenderId}/events`,
+      headers: {
+        Authorization: `Bearer ${data.body.token}`,
       },
-      end: {
-        dateTime: data.body.endTime,
-        timeZone: 'Asia/Jerusalem',
+      body: JSON.stringify({
+        start: {
+          dateTime: data.body.startTime,
+          timeZone: 'Asia/Jerusalem',
+        },
+        end: {
+          dateTime: data.body.endTime,
+          timeZone: 'Asia/Jerusalem',
+        },
+        location: location,
+        summary: summary,
+        colorId: colorId,
+        recurrence:recurrence
+      }),
+    };
+    return new Promise((res) => {
+      request(options, function (error, response) {
+        res(response);
+        if (error) throw new Error(error);
+      });
+    }).then((response) => {
+      if (response.statusCode !== 200) {
+        // console.log('error', response.statusCode);
+        return 400;
+      } else {
+        // console.log('seccess' + response.body);
+        return response.body;
+      }
+    });
+  },
+
+  async getEvents(data) {
+    await console.log(data);
+    var options = {
+      method: 'get',
+      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calenderID}/events`,
+      headers: {
+        Authorization: `Bearer ${data.token}`,
       },
-      location: location,
-      summary: summary,
-        colorId :colorId
-    }),
-  };
+    };
+    return new Promise((res) => {
+      request(options, function (error, response) {
+        res(response);
+        if (error) throw new Error(error);
+      });
+    }).then((response) => {
+      if (response.statusCode !== 200) {
+        // console.log('error', response.statusCode);
+        return 400;
+      } else {
+        // console.log('seccess' + response.body);
+        return response.body;
+      }
+    });
+    //  })
+  },
 
-  request(options, function (error, response) {
-    if (error) throw new Error(error);
-    console.log(response.body);
-    return response.body;
+  async updateEvent(data) {
+    let location = data.body.location || null;
+    let summary = data.body.summary || null;
+    let colorId = data.body.colorId || null;
+    let recurrence = data.body.recurrence || null;
 
-   
-  });
+    var options = {
+      method: 'put',
+      url: `https://www.googleapis.com/calendar/v3/calendars/${data.body.calenderId}/events/${data.body.eventId}`,
+      headers: {
+        Authorization: `Bearer ${data.body.token}`,
+        // ya29.a0AVvZVso81Yl06-Uj60GWDgcDb_3U8kqEbiarAkz3uAUFZL7LEpVb5K0xa19X3VuzyuT2gvV3ONYG9Fg3uSy30sdXkP8bhckuefHJMhQM_BI4f3nvbFNlgO4UrRE82V48xnCRg_7Se4xsN2pCDqVuHi0pJnNCRwaCgYKAZYSARESFQGbdwaIHUMYDx70xqovRqYdUQWZ7Q0165'
+      },
+      body: JSON.stringify({
+        start: {
+          dateTime: data.body.startTime,
+          timeZone: 'Asia/Jerusalem',
+        },
+        end: {
+          dateTime: data.body.endTime,
+          timeZone: 'Asia/Jerusalem',
+        },
+        location: location,
+        summary: summary,
+        colorId: colorId,
+        recurrence:recurrence
+      }),
+    };
+    return new Promise((res) => {
+      request(options, function (error, response) {
+        if (error) throw new Error(error);
+        // console.log(response.body);
+        return response.body;
+      });
+    }).then((response) => {
+      if (response.statusCode !== 200) {
+        // console.log('error', response.statusCode);
+        return 400;
+      } else {
+        // console.log('seccess' + response.body);
+        return response.body;
+      }
+    });
+  },
 
+  async deleteEvent(data) {
+    var options = {
+      method: 'DELETE',
+      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calenderId}/events/${data.eventId}`,
+      headers: {
+        Authorization: `Bearer ${data.token}`,
+      },
+    };
 
+    return new Promise((res) => {
+      request(options, function (error, response) {
+        res(response);
+        if (error) throw new Error(error);
+      });
+    }).then((response) => {
+      if (response.body.code !== 200) {
+        // console.log('error');
+        return 400;
+      } else {
+        // console.log('seccess' + response.body);
+        return response.body;
+      }
+    });
 
   
-
-},
-
-
-async  getEvents (data){
-  var options = {
-    method: 'GET',
-    url: `https://www.googleapis.com/calendar/v3/calendars/${data.body.calenderId}/events`,
-    headers: {
-      Authorization: `Bearer ${data.body.token}`
-    },
-  };
-  request(options, function (error, response) {
-    if (error) throw new Error(error);
-    return response.body;
-  });
-} ,
-
-
-async  updateEvents (collection,doc,data){
-  const cityRef = db.collection(collection).doc(doc);
-
-// Set the 'capital' field of the city
-  const res = await cityRef.update(data);
-  return snapshot;
-}
-
-}
-
-
-
-
-
+  },
+};
