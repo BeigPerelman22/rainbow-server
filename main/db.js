@@ -14,24 +14,38 @@ module.exports.db= {
 // const db = firebase.firestore();
 
 async  addEvent(collection,data){
-
-  db.collection(collection).add(data)
+await delete data.token
+ let doc = await db.collection(collection).add(data)
+ console.log(doc)
 
 },
 
 
-async  getEvents (collection){
-  const citiesRef = db.collection(collection);
-  const snapshot = await citiesRef.get();
-  // snapshot.forEach(doc => {
-  // console.log(doc.id, '=>', doc.data());
-  // })
-  return snapshot;
+async  getEvents (collection,data){
+  const events = [];
+  const citiesRef =await db.collection(collection).where('calenderId','==',data.calenderID);
+ let snapshot = await citiesRef.get().then((querySnapshot) => {
+    
+    querySnapshot.forEach((doc) => {
+      events.push(doc.data());
+    });
+  })
+   if (events === 0) {
+    console.log('No such document!',snapshot.empty);
+    return 400;
+    // return 400
+  } else {
+    // console.log('Document data:', events);
+    return events;
+  }
+  
+ 
 } ,
 
 
 async  updateEvents (collection,doc,data){
-  const cityRef = db.collection(collection).doc(doc);
+  await delete data.token
+  const cityRef =await db.collection(collection).doc(doc);
 
 // Set the 'capital' field of the city
   const res = await cityRef.update(data);

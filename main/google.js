@@ -2,6 +2,8 @@ var request = require('request');
 var bodyParser = require('body-parser');
 const path = require('path');
 var jsonParser = bodyParser.json();
+const uuid = require('uuid');
+// let id =  Buffer.(uuid).toString('base64');
 
 module.exports.google = {
   // Initialize Cloud Firestore and get a reference to the service
@@ -12,7 +14,11 @@ module.exports.google = {
     let summary = data.body.summary || null;
     let colorId = data.body.colorId || null;
     let recurrence = data.body.recurrence || null;
+    let id = data.body.id || null;
     console.log(data.body.startTime, data.body.endTime);
+    // let ids = await uuid.v1();
+    // let id =  Buffer(ids).toString('base64');
+    // console.log(id)
 
     var options = {
       method: 'post',
@@ -32,27 +38,28 @@ module.exports.google = {
         location: location,
         summary: summary,
         colorId: colorId,
-        recurrence:recurrence
+        recurrence:recurrence,
+        id:id
       }),
     };
-    return new Promise((res) => {
+    return new Promise( (res) => {
       request(options, function (error, response) {
         res(response);
         if (error) throw new Error(error);
       });
     }).then((response) => {
       if (response.statusCode !== 200) {
-        // console.log('error', response.statusCode);
+        console.log('error', response.body);
         return 400;
       } else {
-        // console.log('seccess' + response.body);
+        console.log('seccess' + response.body);
         return response.body;
       }
     });
   },
 
   async getEvents(data) {
-    await console.log(data);
+    // await console.log(data);
     var options = {
       method: 'get',
       url: `https://www.googleapis.com/calendar/v3/calendars/${data.calenderID}/events`,
@@ -66,12 +73,14 @@ module.exports.google = {
         if (error) throw new Error(error);
       });
     }).then((response) => {
+      let res = JSON.parse(response.body)
+     
       if (response.statusCode !== 200) {
         // console.log('error', response.statusCode);
         return 400;
       } else {
-        // console.log('seccess' + response.body);
-        return response.body;
+        // console.log('seccess' + JSON.stringify(res.items));
+        return res.items;
       }
     });
     //  })
