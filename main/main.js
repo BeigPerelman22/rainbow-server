@@ -59,7 +59,12 @@ app.post('/calendar/newevent', jsonParser, async (req, res) => {
     // console.log(addE)
     res.status(400).end();
   } else {
-   await dbComponent.db.addEvent("events",req.body)
+    console.log(addE)
+    const newBody = {
+      id: addE.id,
+      ...req.body
+    }  
+   await dbComponent.db.addEvent("events",newBody)
     // console.log(addE)
     res.send(addE);
   }
