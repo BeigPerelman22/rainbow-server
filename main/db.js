@@ -15,6 +15,7 @@ module.exports.db= {
 
 async  addEvent(collection,data){
 await delete data.token
+console.log(data);
  let doc = await db.collection(collection).add(data)
  console.log(doc)
 
@@ -23,9 +24,8 @@ await delete data.token
 
 async  getEvents (collection,data){
   const events = [];
-  const citiesRef =await db.collection(collection).where('calenderId','==',data.calenderID);
+  const citiesRef =await db.collection(collection).where('calendarId','==',data.calendarId);
  let snapshot = await citiesRef.get().then((querySnapshot) => {
-    
     querySnapshot.forEach((doc) => {
       events.push(doc.data());
     });
@@ -33,13 +33,9 @@ async  getEvents (collection,data){
    if (events === 0) {
     console.log('No such document!',snapshot.empty);
     return 400;
-    // return 400
   } else {
-    // console.log('Document data:', events);
     return events;
   }
-  
- 
 } ,
 
 

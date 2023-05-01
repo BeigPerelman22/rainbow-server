@@ -22,7 +22,7 @@ module.exports.google = {
 
     var options = {
       method: 'post',
-      url: `https://www.googleapis.com/calendar/v3/calendars/${data.body.calenderId}/events`,
+      url: `https://www.googleapis.com/calendar/v3/calendars/${data.body.calendarId}/events`,
       headers: {
         Authorization: `Bearer ${data.body.token}`,
       },
@@ -59,10 +59,9 @@ module.exports.google = {
   },
 
   async getEvents(data) {
-    // await console.log(data);
     var options = {
       method: 'get',
-      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calenderID}/events`,
+      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calendarId}/events`,
       headers: {
         Authorization: `Bearer ${data.token}`,
       },
@@ -76,14 +75,11 @@ module.exports.google = {
       let res = JSON.parse(response.body)
      
       if (response.statusCode !== 200) {
-        // console.log('error', response.statusCode);
         return 400;
       } else {
-        // console.log('seccess' + JSON.stringify(res.items));
         return res.items;
       }
     });
-    //  })
   },
 
   async updateEvent(data) {

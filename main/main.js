@@ -23,8 +23,7 @@ app.get('/home', (req, res) => {
   res.sendFile(__dirname + '/client/home/index.html');
 });
 
-app.get('/calendar/events', jsonParser, async (req, res) => {
-  // console.log('hi');
+app.post('/calendar/events', jsonParser, async (req, res) => {
   let getE = await googleComponent.google.getEvents(req.body);
   let eve = await dbComponent.db.getEvents('events',req.body)
 
@@ -34,39 +33,27 @@ app.get('/calendar/events', jsonParser, async (req, res) => {
       return firestoreEvent.id === calendarEvent.id;
     });
   });
-
-  const r = await getE.filter((elem) => !eve.find(({ id }) => elem.id == id));
-console.log("the filter is : "+ JSON.stringify(filteredEvents))
   if ( eve == 400) {
-    // console.log(getE)
     res.status(400).end();
   } else {
-    // eve.forEach(doc => {
-    //   console.log(doc.id, '=>', doc.data());
-    // });
-    
-
-  //  await console.log(getE)
     res.send(filteredEvents);
   }
 });
 
 app.post('/calendar/newevent', jsonParser, async (req, res) => {
-  let addE = await googleComponent.google.addEvent(req);
-  
-  // console.log(addInDB)
-  if (addE == 400) {
-    // console.log(addE)
+  let eventAsString = await googleComponent.google.addEvent(req);
+  let event = JSON.parse(eventAsString);
+  if (event == 400) {
     res.status(400).end();
   } else {
-    console.log(addE)
     const newBody = {
-      id: addE.id,
+      id: event.id,
       ...req.body
-    }  
+    }
+
+   console.log("db body", newBody);
    await dbComponent.db.addEvent("events",newBody)
-    // console.log(addE)
-    res.send(addE);
+    res.send(event);
   }
 });
 
