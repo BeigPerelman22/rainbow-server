@@ -20,13 +20,24 @@ app.get('/home', (req, res) => {
   res.sendFile(__dirname + '/client/home/index.html');
 });
 app.get('/calendar/events', jsonParser, async (req, res) => {
-    let googleEvents = await googleComponent.google.getEvents(req.body);
-    let events = await dbComponent.db.getEvents('events',req.body)
 
-    if (events == 400) {
-        res.status(400).end();
-    }
-    res.send(events);
+  console.log(req.body)
+  let getE = await googleComponent.google.getEvents(req.body);
+  let eve = await dbComponent.db.getEvents('events',req.body)
+
+
+  if ( getE == 400 || eve ==400 ) {
+    res.status(400).end();
+  } else {
+    const filteredEvents = eve.filter(calendarEvent => {
+      // Only return events with the same id as an event in Firestore
+      return getE.some(firestoreEvent => {
+        return firestoreEvent.id === calendarEvent.id;
+      });
+    });
+    console.log (filteredEvents)
+    res.send(filteredEvents);
+  }
 });
 
 app.post('/calendar/newevent', jsonParser, async (req, res) => {
