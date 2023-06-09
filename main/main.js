@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 app.get('/home', (req, res) => {
   res.sendFile(__dirname + '/client/home/index.html');
 });
-app.get('/calendar/events', jsonParser, async (req, res) => {
+
 
 app.get('/calendar/events', jsonParser, async (req, res) => {
 
@@ -98,4 +98,4 @@ http.listen(port, () => {
         res.sendFile();
     });
     console.log(`Mock pos listening on port ${port}`);
-});
+})
