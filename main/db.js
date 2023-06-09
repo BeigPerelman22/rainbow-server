@@ -23,8 +23,10 @@ console.log(data);
 
 
 async  getEvents (collection,data){
+  console.log(data.calenderId)
   const events = [];
-  const citiesRef =await db.collection(collection).where('calendarId','==',data.calendarId);
+  const citiesRef =await db.collection(collection)
+  //.where('calenderId','==',data.calendarId);
  let snapshot = await citiesRef.get().then((querySnapshot) => {
     querySnapshot.forEach((doc) => {
       events.push(doc.data());

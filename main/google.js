@@ -59,6 +59,7 @@ module.exports.google = {
   },
 
   async getEvents(data) {
+    console.log(data)
     var options = {
       method: 'get',
       url: `https://www.googleapis.com/calendar/v3/calendars/${data.calendarId}/events`,
@@ -73,10 +74,11 @@ module.exports.google = {
       });
     }).then((response) => {
       let res = JSON.parse(response.body)
-     
+     console.log(res)
       if (response.statusCode !== 200) {
         return 400;
       } else {
+        // console.log(res.items)
         return res.items;
       }
     });

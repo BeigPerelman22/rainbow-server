@@ -1,5 +1,7 @@
 const express = require('express');
 var cors = require('cors');
+
+
 const app = express();
 
 app.use('/', express.static(__dirname + '/client/login'));
@@ -16,26 +18,31 @@ const dbComponent = require('./db');
 const googleComponent = require('./google');
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/client/login/index.html');
+  console.log("dsadas")
+ res.sendFile(__dirname + '/client/login/index.html');
 });
 
 app.get('/home', (req, res) => {
   res.sendFile(__dirname + '/client/home/index.html');
 });
 
-app.post('/calendar/events', jsonParser, async (req, res) => {
+app.get('/calendar/events', jsonParser, async (req, res) => {
+
+  console.log(req.body)
   let getE = await googleComponent.google.getEvents(req.body);
   let eve = await dbComponent.db.getEvents('events',req.body)
 
-  const filteredEvents = getE.filter(calendarEvent => {
-    // Only return events with the same id as an event in Firestore
-    return eve.some(firestoreEvent => {
-      return firestoreEvent.id === calendarEvent.id;
-    });
-  });
-  if ( eve == 400) {
+
+  if ( getE == 400 || eve ==400 ) {
     res.status(400).end();
   } else {
+    const filteredEvents = getE.filter(calendarEvent => {
+      // Only return events with the same id as an event in Firestore
+      return eve.some(firestoreEvent => {
+        return firestoreEvent.id === calendarEvent.id;
+      });
+    });
+    console.log (filteredEvents)
     res.send(filteredEvents);
   }
 });
