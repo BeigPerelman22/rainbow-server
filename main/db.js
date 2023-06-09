@@ -16,7 +16,7 @@ module.exports.db= {
 async  addEvent(collection,data){
 await delete data.token
 console.log(data);
- let doc = await db.collection(collection).add(data)
+ let doc = await db.collection(collection).doc(data.id).set(data)
  console.log(doc)
 
 },
@@ -41,14 +41,24 @@ async  getEvents (collection,data){
 } ,
 
 
-async  updateEvents (collection,doc,data){
+async  updateEvent (collection,doc,data){
   await delete data.token
-  const cityRef =await db.collection(collection).doc(doc);
+  const cityRef = await db.collection(collection).doc(doc);
 
 // Set the 'capital' field of the city
   const res = await cityRef.update(data);
-  return snapshot;
+  return res;
+},
+
+async  deleteEvent (collection,id){
+  // await delete data.token
+  const cityRef = await db.collection(collection).doc(id).delete();
+
+
+  return cityRef;
 }
+
+
 
 }
 
