@@ -39,14 +39,24 @@ async  getEvents (collection,data){
 } ,
 
 
-async  updateEvents (collection,doc,data){
+async  updateEvent (collection,doc,data){
   await delete data.token
   const cityRef = await db.collection(collection).doc(doc);
 
 // Set the 'capital' field of the city
   const res = await cityRef.update(data);
-  return snapshot;
+  return res;
+},
+
+async  deleteEvent (collection,id){
+  // await delete data.token
+  const cityRef = await db.collection(collection).doc(id).delete();
+
+
+  return cityRef;
 }
+
+
 
 }
 

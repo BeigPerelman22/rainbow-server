@@ -108,7 +108,8 @@ module.exports.google = {
         location: location,
         summary: summary,
         colorId: colorId,
-        recurrence:recurrence
+        recurrence:recurrence,
+    
       }),
     };
     return new Promise((res) => {
@@ -130,7 +131,7 @@ module.exports.google = {
   async deleteEvent(data) {
     var options = {
       method: 'DELETE',
-      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calenderId}/events/${data.eventId}`,
+      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calendarId}/events/${data.id}`,
       headers: {
         Authorization: `Bearer ${data.token}`,
       },
@@ -142,11 +143,11 @@ module.exports.google = {
         if (error) throw new Error(error);
       });
     }).then((response) => {
-      if (response.body.code !== 200) {
-        // console.log('error');
+      if (response.statusCode !== 204) {
+        console.log('error' + JSON.stringify(response));
         return 400;
       } else {
-        // console.log('seccess' + response.body);
+        console.log('seccess' + response.body);
         return response.body;
       }
     });

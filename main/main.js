@@ -8,11 +8,18 @@ var bodyParser = require('body-parser');
 const path = require('path');
 var jsonParser = bodyParser.json();
 const port = 3000;
-
+app.use('/', express.static(__dirname + '/client/login'));
+app.use('/home', express.static(__dirname + '/client/home'));
 const dbComponent = require('./db');
 const googleComponent = require('./google');
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/client/login/index.html');
+});
 
-app.post('/calendar/events', jsonParser, async (req, res) => {
+app.get('/home', (req, res) => {
+  res.sendFile(__dirname + '/client/home/index.html');
+});
+app.get('/calendar/events', jsonParser, async (req, res) => {
     let googleEvents = await googleComponent.google.getEvents(req.body);
     let events = await dbComponent.db.getEvents('events',req.body)
 
@@ -51,7 +58,7 @@ app.put('/calendar/updateevent', jsonParser, async (req, res) => {
     if (update == 400) {
         res.status(400).end();
     } else {
-        let event = await dbComponent.db.updateEvents("events",req.body)
+        let event = await dbComponent.db.updateEvent("events",req.body.id,req.body)
         res.send(event);
     }
 });
@@ -64,8 +71,9 @@ app.delete('/calendar/deleteevent', jsonParser, async (req, res) => {
         console.log(deleteE);
         res.status(400).end();
     } else {
-        console.log(deleteE);
-        res.send(deleteE);
+      console.log("delted " + deleteE)
+      let event = await dbComponent.db.deleteEvent("events",req.body.id)
+      res.send(event);
     }
 });
 
