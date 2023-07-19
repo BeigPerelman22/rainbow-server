@@ -22,7 +22,7 @@ await delete data.token
 },
 
 
-async  getEvents (collection,data){
+async  getEvents (collection,calenderId){
   // console.log(data.calenderId)
   const events = [];
   const citiesRef =await db.collection(collection)
