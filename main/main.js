@@ -26,9 +26,9 @@ app.get('/home', (req, res) => {
 
 app.get('/calendar/events', jsonParser, async (req, res) => {
 
-  console.log(req.body)
-  let getE = await googleComponent.google.getEvents(req.body);
-  let eve = await dbComponent.db.getEvents('events',req.body)
+  console.log(req.headers)
+  let getE = await googleComponent.google.getEvents(req.headers.calendarid, req.headers.token);
+  let eve = await dbComponent.db.getEvents('events', req.headers.calendarid)
 
 
   if ( getE == 400 || eve ==400 ) {
@@ -46,7 +46,7 @@ app.get('/calendar/events', jsonParser, async (req, res) => {
 });
 
 app.post('/calendar/newevent', jsonParser, async (req, res) => {
-    let eventAsString = await googleComponent.google.addEvent(req);
+    let eventAsString = await googleComponent.google.addEvent(req, req.headers.calendarid, req.headers.token);
     let event = JSON.parse(eventAsString);
 
     if (event == 400) {
@@ -61,6 +61,7 @@ app.post('/calendar/newevent', jsonParser, async (req, res) => {
           hasReceipt: true,
           isSubmitted: false,
           isMoneyRefund: true,
+          calendarId: req.headers.calendarid,
           ...req.body
         }
 
@@ -70,17 +71,17 @@ app.post('/calendar/newevent', jsonParser, async (req, res) => {
 });
 
 app.put('/calendar/updateevent', jsonParser, async (req, res) => {
-    let update = await googleComponent.google.updateEvent(req);
+    let update = await googleComponent.google.updateEvent(req, req.headers.calendarid, req.headers.token);
     if (update == 400) {
         res.status(400).end();
     } else {
-        let event = await dbComponent.db.updateEvent("events",req.body.id,req.body)
+        let event = await dbComponent.db.updateEvent("events",req.body.id,{...req.body, calendarId: req.headers.calendarid})
         res.send(event);
     }
 });
 
 app.delete('/calendar/deleteevent', jsonParser, async (req, res) => {
-    let deleteE = await googleComponent.google.deleteEvent(req.body);
+    let deleteE = await googleComponent.google.deleteEvent(req.query.id, req.headers.calendarid, req.headers.token);
     await console.log(JSON.stringify(deleteE));
 
     if (deleteE == 400) {
@@ -88,7 +89,7 @@ app.delete('/calendar/deleteevent', jsonParser, async (req, res) => {
         res.status(400).end();
     } else {
       console.log("delted " + deleteE)
-      let event = await dbComponent.db.deleteEvent("events",req.body.id)
+      let event = await dbComponent.db.deleteEvent("events",req.query.id)
       res.send(event);
     }
 });

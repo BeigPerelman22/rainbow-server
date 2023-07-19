@@ -9,7 +9,7 @@ module.exports.google = {
   // Initialize Cloud Firestore and get a reference to the service
   // const db = firebase.firestore();
 
-  async addEvent(data) {
+  async addEvent(data, calendarId, token) {
     let location = data.body.location || null;
     let summary = data.body.summary || null;
     let colorId = data.body.colorId || null;
@@ -22,9 +22,9 @@ module.exports.google = {
 
     var options = {
       method: 'post',
-      url: `https://www.googleapis.com/calendar/v3/calendars/${data.body.calendarId}/events`,
+      url: `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`,
       headers: {
-        Authorization: `Bearer ${data.body.token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         start: {
@@ -58,13 +58,12 @@ module.exports.google = {
     });
   },
 
-  async getEvents(data) {
-    console.log(data)
+  async getEvents(calendarId, token) {
     var options = {
       method: 'get',
-      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calendarId}/events`,
+      url: `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`,
       headers: {
-        Authorization: `Bearer ${data.token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
     return new Promise((res) => {
@@ -84,18 +83,18 @@ module.exports.google = {
     });
   },
 
-  async updateEvent(data) {
+  async updateEvent(data, calendarId, token) {
     let location = data.body.location || null;
     let summary = data.body.summary || null;
     let colorId = data.body.colorId || null;
     let recurrence = data.body.recurrence || null;
 
-    console.log(data.body.calendarId, data.body.id, data.body.token)
+    console.log(calendarId, data.body.id, token)
     var options = {
       method: 'put',
-      url: `https://www.googleapis.com/calendar/v3/calendars/${data.body.calendarId}/events/${data.body.id}`,
+      url: `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${data.body.id}`,
       headers: {
-        Authorization: `Bearer ${data.body.token}`,
+        Authorization: `Bearer ${token}`,
         // ya29.a0AVvZVso81Yl06-Uj60GWDgcDb_3U8kqEbiarAkz3uAUFZL7LEpVb5K0xa19X3VuzyuT2gvV3ONYG9Fg3uSy30sdXkP8bhckuefHJMhQM_BI4f3nvbFNlgO4UrRE82V48xnCRg_7Se4xsN2pCDqVuHi0pJnNCRwaCgYKAZYSARESFQGbdwaIHUMYDx70xqovRqYdUQWZ7Q0165'
       },
       body: JSON.stringify({
@@ -130,12 +129,12 @@ module.exports.google = {
     });
   },
 
-  async deleteEvent(data) {
+  async deleteEvent(id, calendarId, token) {
     var options = {
       method: 'DELETE',
-      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calendarId}/events/${data.id}`,
+      url: `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${id}`,
       headers: {
-        Authorization: `Bearer ${data.token}`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
