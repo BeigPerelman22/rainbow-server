@@ -22,8 +22,8 @@ console.log(data);
 },
 
 
-async  getEvents (collection,data){
-  console.log(data.calenderId)
+async  getEvents (collection,calenderId){
+  console.log(calenderId)
   const events = [];
   const citiesRef =await db.collection(collection)
   //.where('calenderId','==',data.calendarId);
