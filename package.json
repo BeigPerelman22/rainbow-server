@@ -6,19 +6,22 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build":"node main/main.js",
-    "start":"node main/main.js"
+    "build": "node main/main.js",
+    "start": "node main/main.js"
   },
   "dependencies": {
+    "@google-cloud/local-auth": "^2.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "express-fileupload": "^1.2.1",
     "firebase": "^9.22.1",
     "firebase-admin": "^11.9.0",
+    "googleapis": "^122.0.0",
     "passport-google-oauth20": "^2.0.0",
     "request": "^2.88.2"
   },
   "directories": {
     "serve": "main"
-}
+  }
 }

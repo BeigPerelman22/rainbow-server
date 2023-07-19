@@ -26,7 +26,7 @@ app.get('/home', (req, res) => {
 
 app.get('/calendar/events', jsonParser, async (req, res) => {
 
-  console.log(req.body)
+  // console.log(req.body)
   let getE = await googleComponent.google.getEvents(req.body);
   let eve = await dbComponent.db.getEvents('events',req.body)
 
@@ -40,7 +40,7 @@ app.get('/calendar/events', jsonParser, async (req, res) => {
         return firestoreEvent.id === calendarEvent.id;
       });
     });
-    console.log (filteredEvents)
+    // console.log (filteredEvents)
     res.send(filteredEvents);
   }
 });

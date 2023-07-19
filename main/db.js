@@ -15,15 +15,15 @@ module.exports.db= {
 
 async  addEvent(collection,data){
 await delete data.token
-console.log(data);
+// console.log(data);
  let doc = await db.collection(collection).doc(data.id).set(data)
- console.log(doc)
+//  console.log(doc)
 
 },
 
 
 async  getEvents (collection,data){
-  console.log(data.calenderId)
+  // console.log(data.calenderId)
   const events = [];
   const citiesRef =await db.collection(collection)
   //.where('calenderId','==',data.calendarId);

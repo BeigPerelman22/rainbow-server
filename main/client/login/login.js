@@ -3,7 +3,7 @@ let tokenClient;
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
 const CLIENT_ID = '85903642158-afk6nadtdach9qstunu10ktnjo5h4oim.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyA_VyASXClKV8XWdG0chE1puMpcVHTfmds';
-const SCOPES = 'https://www.googleapis.com/auth/calendar';
+const SCOPES = ['https://www.googleapis.com/auth/calendar','https://www.googleapis.com/auth/drive.file'];
 
 function gapiLoaded() {
     gapi.load('client', initializeGapiClient);
@@ -19,7 +19,7 @@ async function initializeGapiClient() {
 function gisLoaded() {
     tokenClient = google.accounts.oauth2.initTokenClient({
       client_id: CLIENT_ID,
-      scope: SCOPES,
+      scope: SCOPES.join(' '),
       callback: '', // defined later
     });
 }

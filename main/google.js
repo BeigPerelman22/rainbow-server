@@ -59,10 +59,10 @@ module.exports.google = {
   },
 
   async getEvents(data) {
-    console.log(data)
+    // console.log(data)
     var options = {
       method: 'get',
-      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calendarId}/events`,
+      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calendarId}/events?timeMin=${data.timeMin}&timeMax=${data.timeMax}`,
       headers: {
         Authorization: `Bearer ${data.token}`,
       },
@@ -74,7 +74,7 @@ module.exports.google = {
       });
     }).then((response) => {
       let res = JSON.parse(response.body)
-     console.log(res)
+     console.log(res.length)
       if (response.statusCode !== 200) {
         return 400;
       } else {
@@ -133,10 +133,11 @@ module.exports.google = {
   async deleteEvent(data) {
     var options = {
       method: 'DELETE',
-      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calendarId}/events/${data.id}`,
+      url: `https://www.googleapis.com/calendar/v3/calendars/${data.calendarId}/events?timeMin=2023-07-01T00:00:00Z&timeMax=2023-07-31T23:59:59Z`,
       headers: {
         Authorization: `Bearer ${data.token}`,
       },
+      
     };
 
     return new Promise((res) => {
@@ -149,7 +150,7 @@ module.exports.google = {
         console.log('error' + JSON.stringify(response));
         return 400;
       } else {
-        console.log('seccess' + response.body);
+        // console.log('seccess' + response.body);
         return response.body;
       }
     });
