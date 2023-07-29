@@ -14,11 +14,14 @@ module.exports.db= {
 // const db = firebase.firestore();
 
 async  addEvent(collection,data){
+  // data = JSON.stringify(data);
 await delete data.token
-// console.log(data);
- let doc = await db.collection(collection).doc(data.id).set(data)
-//  console.log(doc)
-
+console.log("asdasd" + data.id);
+ let doc = await db.collection(collection).doc(data.id).set(data);
+//  const cityRef = await db.collection(collection).doc(data.id);
+//  const city = await cityRef.get();
+// await console.log(doc)
+return data ;
 },
 
 
@@ -47,7 +50,9 @@ async  updateEvent (collection,doc,data){
 
 // Set the 'capital' field of the city
   const res = await cityRef.update(data);
-  return res;
+  const city = await cityRef.get();
+  // await console.log(JSON.stringify(city.data()))
+  return JSON.stringify(city.data());
 },
 
 async  deleteEvent (collection,id){

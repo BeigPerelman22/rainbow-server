@@ -1,55 +1,205 @@
-// const express = require('express');
-// const fileUpload = require('express-fileupload');
-// const { google } = require('googleapis');
-// const { authenticate } = require('@google-cloud/local-auth');
+
+const express = require('express');
+const fileUpload = require('express-fileupload');
+const { google } = require('googleapis');
+const fs = require('fs');
+var request = require('request');
+// var fs = require('fs');.
 // const fs = require('fs');
+const axios = require('axios');
+const app = express();
 
-// const app = express();
-// app.use(fileUpload());
+const mime = require('mime-types');
+app.use(fileUpload({
+    useTempFiles : true,
+}));
 
-// // פונקציה להעלאת הקובץ ל-Google Drive
-// async function uploadFileToDrive(fileContent) {
-//   try {
-//     const auth = await authenticate({
-//       keyfilePath: 'credentials.json', // נתיב לקובץ הקרדנשיאלס
-//       scopes: ['https://www.googleapis.com/auth/drive.file'], // סוג ההרשאה הנדרשת
-//     });
 
-//     const drive = google.drive({
-//       version: 'v3',
-//       auth: auth,
-//     });
+module.exports.drive = {
+async getlinkFile(accessToken, fileId) {
+  var request = require('request');
+var options = {
+  'method': 'GET',
+  'url': `https://www.googleapis.com/drive/v3/files/${fileId}?fields=webViewLink,mimeType,name`,
+  'headers': {
+    'Authorization': `Bearer ${accessToken}`} 
+  }
 
-//     const fileMetadata = {
-//       name: 'my-file.pdf', // שם הקובץ ב-Google Drive
-//       parents: ['YOUR_FOLDER_ID'], // תיקיית היעד ב-Google Drive
-//     };
+request(options, function (error, response) {
+  if (error) throw new Error(error);
+  console.log(response.body);
+}).then((response) => {
+  if (response.statusCode !== 204) {
+    console.log('error' + JSON.stringify(response));
+    return 400;
+  } else {
+    // console.log('seccess' + response.body);
+    return response.body;
+  }
+});
 
-//     const response = await drive.files.create({
-//       requestBody: fileMetadata,
-//       media: {
-//         mimeType: 'application/pdf',
-//         body: fileContent,
-//       },
-//     });
+},
 
-//     console.log('הקובץ הועלה בהצלחה!');
-//     console.log('ID של הקובץ ב-Google Drive:', response.data.id);
-//   } catch (error) {
-//     console.error('אירעה שגיאה:', error);
-//   }
-// }
+async  upFile(fileContent, accessToken,name) {
+  const mimeType = mime.lookup(fileContent) || 'application/octet-stream';
+
+
+
+var options = {
+  'method': 'POST',
+  'url': 'https://www.googleapis.com/upload/drive/v3/files',
+  'headers': {
+    'Authorization': accessToken,
+    'mimeType': mimeType,
+    "Content-Type": "application/json",
+  },
+  // "formData": formData
+  formData: {
+    'pdf': {
+      'value': fileContent,
+      'options': {
+        'filename': 'Users/leviv/OneDrive/מסמכים/Levi Vorst - CV.pdf',
+        'contentType': null
+      }
+    },
+    'name': {
+      'value': name,
+      'options': {
+        'filename': 'Users/leviv/Downloads/מבחנים/test.json',
+        'contentType': null
+      }
+    }
+  }
+};
+
+return new Promise( (res) => {
+request(options, function (error, response) {
+  if (error) throw new Error(error);
+  console.log(response.body);
+});
+}).then((response) => {
+  if (response.statusCode !== 204) {
+    console.log('error' + JSON.stringify(response));
+    return 400;
+  } else {
+    console.log('seccess' + response.body);
+    return response.body;
+  }
+});
+
+
+}
+}
+
+function createFolderInGoogleDrive(accessToken, folderName) {
+  const url = 'https://www.googleapis.com/upload/drive/v3/files';
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    'Content-Type': 'application/json',
+  };
+  const data = {
+    name: folderName,
+    mimeType: 'application/vnd.google-apps.folder',
+  };
+
+  return new Promise((resolve, reject) => {
+    request.post(
+      {
+        url,
+        headers,
+        json: true,
+        body: data,
+      },
+      (error, response, body) => {
+        if (error) {
+          console.error('אירעה שגיאה ביצירת התיקיה:', error.message);
+          return reject(error);
+        }
+
+        if (response.statusCode !== 200) {
+          console.error(
+            'אירעה שגיאה ביצירת התיקיה. קוד תגובה:',
+            response.statusCode
+          );
+          return reject(new Error('שגיאה ביצירת התיקיה.'));
+        }
+
+        console.log('נוצרה תיקיה חדשה ב-Google Drive.');
+        console.log('ה-ID של התיקיה הוא:', body.id);
+        resolve(body.id);
+      }
+    );
+  });
+}
+
+  async function up(fileContent, accessToken,name) {
+    const mimeType = mime.lookup(fileContent) || 'application/octet-stream';
+
+  
+
+  var options = {
+    'method': 'POST',
+    'url': 'https://www.googleapis.com/upload/drive/v3/files',
+    'headers': {
+      'Authorization': accessToken,
+      'mimeType': mimeType,
+      "Content-Type": "application/json",
+    },
+    // "formData": formData
+    formData: {
+      'pdf': {
+        'value': fileContent,
+        'options': {
+          'filename': 'Users/leviv/OneDrive/מסמכים/Levi Vorst - CV.pdf',
+          'contentType': null
+        }
+      },
+      'name': {
+        'value': name,
+        'options': {
+          'filename': 'Users/leviv/Downloads/מבחנים/test.json',
+          'contentType': null
+        }
+      }
+    }
+  };
+
+  
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    console.log(response.body);
+  });
+  
+  
+  }
+
 
 // app.post('/upload', async (req, res) => {
-//   if (!req.files || !req.files.pdf) {
+
+//   // createFolderInGoogleDrive(req.headers.authorization, 'test')
+//   if ( !req.files.pdf) {
 //     return res.status(400).send('לא נמצא קובץ להעלאה.');
 //   }
+//   let data = {
+//     name: JSON.stringify(req.headers.summary),
+//   }
+// // writeJsonFile( JSON.stringify(data))
+//   // console.log("fdfdsf" + fs.createReadStream(req.files.name.tempFilePath))
 
-//   const pdf = req.files.pdf;
-//   const fileContent = fs.readFileSync(pdf.tempFilePath);
-
-//   // העלאת הקובץ ל-Google Drive
-//   await uploadFileToDrive(fileContent);
+//   const pdf =await req.files.pdf;
+//   const name =await req.files.name;
+// //  await  console.log("sdsd" + req.files.pdf.tempFilePath);
+//   const fileContent =await fs.createReadStream(pdf.tempFilePath);
+// const nameFile =await fs.createReadStream(name.tempFilePath);
+//   const accessToken = req.headers.authorization; // קבלת הטוקן מכותרת ה-authorization של הבקשה
+// console.log(accessToken)
+//   if (!accessToken) {
+//     return res.status(400).send('יש לספק טוקן הרשאות לדרייב שלך.');
+//   }
+// // let 
+//   // העלאת הקובץ לדרייב
+//   console.log(name)
+//   await up(fileContent, accessToken,nameFile)
 
 //   res.send('הקובץ הועלה בהצלחה!');
 // });
@@ -59,64 +209,23 @@
 // });
 
 
-const express = require('express');
-const fileUpload = require('express-fileupload');
-const { google } = require('googleapis');
-const fs = require('fs');
 
-const app = express();
-app.use(fileUpload({
-    useTempFiles : true,
-}));
+const data = {
+  name: 'John Doe',
+  age: 30,
+  email: 'johndoe@example.com'
+};
 
-// פונקציה להעלאת הקובץ לדרייב
-async function uploadFileToDrive(fileContent, accessToken) {
-  const oauth2Client = new google.auth.OAuth2();
-  oauth2Client.setCredentials({ access_token: accessToken });
+// המרה של האובייקט למחרוזת JSON
+const jsonData = JSON.stringify(data, null, 2); // הארגומנטים null ו-2 מביעים שהמרווח בין שדות ה-JSON יהיה 2 תווים
 
-  const drive = google.drive({
-    version: 'v3',
-    auth: oauth2Client,
-  });
-
-  const fileMetadata = {
-    name: 'my-rain.pdf', // שם הקובץ ב-Google Drive
-    parents: ['rainbow'], // תיקיית היעד ב-Google Drive
-  };
-
-  const response = await drive.files.create({
-    requestBody: fileMetadata,
-    media: {
-      mimeType: 'application/pdf',
-      body: fileContent,
-    },
-  });
-
-  console.log('הקובץ הועלה בהצלחה!');
-  console.log('ID של הקובץ ב-Google Drive:');
+// כתיבת המחרוזת לקובץ באמצעות פונקצית writeFile
+async function writeJsonFile(jsonData) {
+fs.writeFile(`test.json`, jsonData, 'utf8', (err) => {
+  if (err) {
+    console.error('אירעה שגיאה בכתיבת הקובץ:', err);
+  } else {
+    console.log('הקובץ נוצר בהצלחה!');
+  }
+});
 }
-
-app.post('/upload', async (req, res) => {
-  if ( !req.files.pdf) {
-    return res.status(400).send('לא נמצא קובץ להעלאה.');
-  }
-
-  const pdf =await req.files.pdf;
-//  await  console.log("sdsd" + req.files.pdf.tempFilePath);
-//   const fileContent =await fs.createReadStream(pdf.tempFilePath);
-
-  const accessToken = req.headers.authorization; // קבלת הטוקן מכותרת ה-authorization של הבקשה
-
-  if (!accessToken) {
-    return res.status(400).send('יש לספק טוקן הרשאות לדרייב שלך.');
-  }
-
-  // העלאת הקובץ לדרייב
-  await uploadFileToDrive(fileContent, accessToken);
-
-  res.send('הקובץ הועלה בהצלחה!');
-});
-
-app.listen(3000, () => {
-  console.log('ה-API ממתין לבקשות בפורט 3000');
-});
