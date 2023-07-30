@@ -90,6 +90,7 @@ app.post('/calendar/newevent',upload, jsonParser, async (req, res) => {
           endTime:  eventAsString.end.dateTime,
           summary: event.summary,
           location: event.location || "",
+          colorId: event.colorId|| "",
           // eventDescription: event.description,
           attachments:event.attachments || [],
           
