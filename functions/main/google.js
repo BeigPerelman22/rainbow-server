@@ -6,6 +6,7 @@ const uuid = require('uuid');
 // let id =  Buffer.(uuid).toString('base64');
 const { google } = require('googleapis');
 const { file } = require('googleapis/build/src/apis/file');
+const { title } = require('process');
 
 module.exports.google = {
   // Initialize Cloud Firestore and get a reference to the service
@@ -13,24 +14,44 @@ module.exports.google = {
 
   async addEvent(data, calendarId, token) {
     // data = JSON.parse(data);
-    // console.log(data)
+    console.log("this is the data " +calendarId)
     let location = data.location || null;
     let summary = data.summary || null;
     let colorId = data.colorId || null;
     let recurrence = data.recurrence || null;
     let id = data.id || null;
+    const attachmentslink = [
+      {file : data?.attachments?.receiptFile,name:"receiptFile"},
+      {file: data?.attachments?.submittedFile,name:"submittedFile"},
+      {file : data?.attachments?.moneyRefundFile,name:"moneyRefundFile"}
+    ]
+   
+    // if(attachmentslink){
+      attachments = []
+      for(let i=0;i<attachmentslink.length;i++){
+        if(attachmentslink[i].file!==undefined){
+          attachments.push({
+        fileUrl: attachmentslink[i].file,
+        title:attachmentslink[i].name
+        
+      })
+    }
+    // }
+  }
     // let attachments = data?.attachments?.[0]?.fileUrl || null;
-    if (data.attachments !== null) {
-      attachments = 
-        [{
-          fileUrl: data.attachments[0].fileUrl
-        }
-        ]
-      }
-    // console.log(data.attachments[0].fileUrl);
+    // if (data.attachments !== null && data.attachments[0] !== undefined) {
+    //   attachments = 
+    //     [{
+    //       fileUrl: data.attachments[0].fileUrl
+    //     }
+    //     ]
+    //   }
+    //   else{
+    //     attachments=[]
+    //   }
     // let ids = await uuid.v1();
     // let id =  Buffer(ids).toString('base64');
-    // console.log(id)
+  await  console.log("fdsfds" + JSON.stringify(attachments))
 
     var options = {
       method: 'post',
@@ -40,11 +61,11 @@ module.exports.google = {
       },
       body: JSON.stringify({
         start: {
-          dateTime: data.starttime,
+          dateTime: data.startTime,
           timeZone: 'Asia/Jerusalem',
         },
         end: {
-          dateTime: data.endtime,
+          dateTime: data.endTime,
           timeZone: 'Asia/Jerusalem',
         },
         location: location,
@@ -115,7 +136,24 @@ module.exports.google = {
     let summary = data.body.summary || null;
     let colorId = data.body.colorId || null;
     let recurrence = data.body.recurrence || null;
-
+    const attachmentslink = [
+      {file : data?.attachments?.receiptFile,name:"receiptFile"},
+      {file: data?.attachments?.submittedFile,name:"submittedFile"},
+      {file : data?.attachments?.moneyRefundFile,name:"moneyRefundFile"}
+    ]
+   
+    // if(attachmentslink){
+      attachments = []
+      for(let i=0;i<attachmentslink.length;i++){
+        if(attachmentslink[i].file!==undefined){
+          attachments.push({
+        fileUrl: attachmentslink[i].file,
+        title:attachmentslink[i].name
+        
+      })
+    }
+    // }
+  }
     console.log(data.body.calendarId, data.body.id, data.body.token)
     var options = {
       method: 'put',
@@ -137,6 +175,7 @@ module.exports.google = {
         summary: summary,
         colorId: colorId,
         recurrence:recurrence,
+        attachments:attachments
     
       }),
     };
@@ -183,71 +222,6 @@ module.exports.google = {
 
   
   },
-
-
-
-
-
-  ///-----------------------
-
-// async addEvent(data, calendarId, token) {
-//   const location = data.location || null;
-//   const summary = data.summary || null;
-//   const colorId = data.colorId || null;
-//   const recurrence = data.recurrence || null;
-//   const id = data.id || null;
-//   console.log(data.startTime, data.endTime);
-
-//   // Prepare file data (if available)
-//   let fileData = null;
-//   if (data.body.fileUrl) {
-//     fileData = fs.readFileSync(data.body.fileUrl);
-//   }
-
-//   // Set up the Google Calendar API
-//   const auth = new google.auth.OAuth2();
-//   auth.setCredentials({ access_token: token });
-//   const calendar = google.calendar({ version: 'v3', auth });
-
-//   const event = {
-//     start: {
-//       dateTime: data.body.startTime,
-//       timeZone: 'Asia/Jerusalem',
-//     },
-//     end: {
-//       dateTime: data.body.endTime,
-//       timeZone: 'Asia/Jerusalem',
-//     },
-//     location: location,
-//     summary: summary,
-//     colorId: colorId,
-//     recurrence: recurrence,
-//     id: id,
-//   };
-
-//   // If file data exists, add it as an attachment to the event
-//   if (fileData) {
-//     const media = {
-//       mimeType: 'application/octet-stream',
-//       body: fileData,
-//     };
-//     const res = await calendar.events.insert({
-//       calendarId: calendarId,
-//       resource: event,
-//       media: media,
-//     });
-//     console.log('Event created: ', res.data);
-//     return res.data;
-//   } else {
-//     const res = await calendar.events.insert({
-//       calendarId: calendarId,
-//       resource: event,
-//     });
-//     console.log('Event created: ', res.data);
-//     return res.data;
-//   }
-// }
-
 
 
 };

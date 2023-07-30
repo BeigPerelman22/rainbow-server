@@ -139,13 +139,16 @@ app.post('/calendar/newevent', jsonParser, async (req, res) => {
   //   }
   //   }
    }
+   else{
+    bodyFile =await req.headers
+   }
 
   // let upFileTodrive = await drive.drive.upToDrive(req)
   // newReq = await JSON.parse(newReq)
-//  await console.log("newReq", bodyFile);
+ await console.log("newReq", bodyFile);
   let eventAsString = await googleComponent.google.addEvent(bodyFile, req.headers.calendarid, req.headers.token);
   eventAsString = await JSON.parse(eventAsString)
-   await console.log("eventAsString" + eventAsString.id)
+  //  await console.log("eventAsString" + eventAsString.id)
     let event = eventAsString
     if (eventAsString == 400) {
         res.status(400).end();
@@ -163,9 +166,9 @@ app.post('/calendar/newevent', jsonParser, async (req, res) => {
           startTime:  eventAsString.start.dateTime,
           endTime:  eventAsString.end.dateTime,
           summary: event.summary,
-          location: event.location,
+          location: event.location ||"",
           // eventDescription: event.description,
-          attachments:event.attachments,
+          attachments:event.attachments || [],
           
         }
         console.log("newBody", newBody);
